@@ -1,0 +1,34 @@
+.pt-section { margin-top: 16px; }
+
+.pt-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.pt-filter { width: 320px; }
+
+.pt-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.pt-table {
+  width: 100%;
+  min-width: 1800px; /* wide: allow horizontal scroll on smaller screens */
+}
+
+th.mat-header-cell {
+  white-space: nowrap;
+  font-weight: 600;
+  background: #f8fafc; /* sticky header background */
+}
+
+td.mat-cell {
+  white-space: nowrap;
+}
+
+.pt-chipset .mdc-evolution-chip {
+  --mdc-chip-container-height: 24px;
+  margin: 0;
+}

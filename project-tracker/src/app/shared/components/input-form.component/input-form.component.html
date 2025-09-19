@@ -1,0 +1,182 @@
+<form class="container" [formGroup]="form" (ngSubmit)="submit()">
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>3rd Party Staffing</mat-card-title>
+        <mat-card-subtitle>Enter project details and milestones</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="grid">
+      <!-- Engineering Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>Engineering Number</mat-label>
+          <input matInput formControlName="engineeringNumber" placeholder="e.g., SC205001" maxlength="50" />
+          <mat-hint align="end">{{ form.controls['engineeringNumber'].value?.length || 0 }}/50</mat-hint>
+          <mat-error *ngIf="form.controls['engineeringNumber'].hasError('required')">Required</mat-error>
+        </mat-form-field>
+
+        <!-- Project Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Project Type</mat-label>
+          <mat-select formControlName="projectType" required>
+            <mat-option *ngFor="let t of projectTypes" [value]="t">{{ t }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls['projectType'].hasError('required')">Required</mat-error>
+        </mat-form-field>
+
+
+        <!-- WO -->
+        <mat-form-field appearance="outline">
+          <mat-label>WO</mat-label>
+          <input matInput formControlName="wo" placeholder="Work Order #" />
+        </mat-form-field>
+
+        <!-- Town -->
+        <mat-form-field appearance="outline">
+          <mat-label>Town</mat-label>
+          <input matInput formControlName="town" />
+        </mat-form-field>
+
+        <!-- Project Lead -->
+        <mat-form-field appearance="outline">
+          <mat-label>Project Lead</mat-label>
+          <input matInput formControlName="projectLead" />
+          <mat-error *ngIf="form.controls['projectLead'].hasError('required')">Required</mat-error>
+        </mat-form-field>
+
+        <!-- Service -->
+        <mat-form-field appearance="outline">
+          <mat-label>Service</mat-label>
+          <mat-select formControlName="service">
+            <mat-option *ngFor="let s of services" [value]="s">{{ s }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Sheets -->
+        <mat-form-field appearance="outline">
+          <mat-label>Sheets</mat-label>
+          <input matInput type="number" formControlName="sheets" min="0" step="1" />
+          <mat-error *ngIf="form.controls['sheets'].hasError('min')">Must be ≥ 0</mat-error>
+        </mat-form-field>
+
+        <!-- Anticipated NTP -->
+        <mat-form-field appearance="outline">
+          <mat-label>Anticipated NTP</mat-label>
+          <input matInput [matDatepicker]="antNtp" formControlName="anticipatedNtp" />
+          <mat-datepicker-toggle matSuffix [for]="antNtp"></mat-datepicker-toggle>
+          <mat-datepicker #antNtp></mat-datepicker>
+        </mat-form-field>
+
+        <!-- NTP -->
+        <mat-form-field appearance="outline">
+          <mat-label>NTP</mat-label>
+          <input matInput [matDatepicker]="ntp" formControlName="ntp" />
+          <mat-datepicker-toggle matSuffix [for]="ntp"></mat-datepicker-toggle>
+          <mat-datepicker #ntp></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Expected Completion -->
+        <mat-form-field appearance="outline">
+          <mat-label>Expected Completion</mat-label>
+          <input matInput [matDatepicker]="expComp" formControlName="expectedCompletion" />
+          <mat-datepicker-toggle matSuffix [for]="expComp"></mat-datepicker-toggle>
+          <mat-datepicker #expComp></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Deliverables Received -->
+        <mat-form-field appearance="outline">
+          <mat-label>Deliverables Received</mat-label>
+          <input matInput [matDatepicker]="delRec" formControlName="deliverablesReceived" />
+          <mat-datepicker-toggle matSuffix [for]="delRec"></mat-datepicker-toggle>
+          <mat-datepicker #delRec></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Debrief (date) -->
+        <mat-form-field appearance="outline">
+          <mat-label>Debrief</mat-label>
+          <input matInput [matDatepicker]="debrief" formControlName="debrief" />
+          <mat-datepicker-toggle matSuffix [for]="debrief"></mat-datepicker-toggle>
+          <mat-datepicker #debrief></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Contractor Selected -->
+        <mat-form-field appearance="outline">
+          <mat-label>Contractor Selected</mat-label>
+          <input matInput formControlName="contractorSelected" />
+        </mat-form-field>
+
+        <!-- LG Drawing [Y or N] -->
+        <mat-form-field appearance="outline">
+          <mat-label>LG Drawing</mat-label>
+          <mat-select formControlName="lgDrawing">
+            <mat-option [value]="'Yes'">Yes</mat-option>
+            <mat-option [value]="'No'">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- KH Billing # -->
+        <mat-form-field appearance="outline">
+          <mat-label>KH Billing #</mat-label>
+          <input matInput formControlName="khBillingNumber" />
+        </mat-form-field>
+
+        <!-- Anticipated Fee -->
+        <mat-form-field appearance="outline">
+          <mat-label>Anticipated Fee</mat-label>
+          <span matTextPrefix>$&nbsp;</span>
+          <input matInput type="number" formControlName="anticipatedFee" min="0" step="0.01" />
+          <mat-hint>USD</mat-hint>
+          <mat-error *ngIf="form.controls['anticipatedFee'].hasError('min')">Must be ≥ 0</mat-error>
+        </mat-form-field>
+
+        <!-- Anticipated Nicor Report Month -->
+        <mat-form-field appearance="outline">
+          <mat-label>Anticipated Nicor Report Month</mat-label>
+          <mat-select formControlName="anticipatedNicorReportMonth">
+            <mat-optgroup *ngFor="let y of nicorYears()" [label]="y.toString()">
+              <mat-option *ngFor="let m of months"
+                          [value]="{ month: m.value, year: y }">
+                {{ m.label }} {{ y }}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Billed/ Reported to Nicor? -->
+        <mat-form-field appearance="outline">
+          <mat-label>Billed / Reported to Nicor?</mat-label>
+          <mat-select formControlName="billedReportedNicor">
+            <mat-option [value]="'Yes'">Yes</mat-option>
+            <mat-option [value]="'No'">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Scope/Notes -->
+        <mat-form-field appearance="outline" class="col-span-2">
+          <mat-label>Scope/Notes</mat-label>
+          <textarea matInput formControlName="scopeNotes" rows="5"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions class="actions">
+        <button mat-stroked-button type="button" (click)="reset()" [disabled]="form.pristine">
+          <mat-icon>restart_alt</mat-icon>&nbsp;Reset
+        </button>
+        <span class="spacer"></span>
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+          <mat-icon>save</mat-icon>&nbsp;Save
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="preview" *ngIf="submitted()">
+      <mat-card-header>
+        <mat-card-title>Submitted Payload (for wiring)</mat-card-title>
+        <mat-card-subtitle>What you’ll send to your API</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <pre>{{ form.value | json }}</pre>
+      </mat-card-content>
+    </mat-card>
+  </form>

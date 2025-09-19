@@ -22,6 +22,7 @@
               }
             ],
             "styles": [
+              "src/custom-theme.scss",
               "src/styles.css"
             ],
             "server": "src/main.server.ts",
@@ -61,7 +62,8 @@
               "buildTarget": "project-tracker:build:production"
             },
             "development": {
-              "buildTarget": "project-tracker:build:development"
+              "buildTarget": "project-tracker:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

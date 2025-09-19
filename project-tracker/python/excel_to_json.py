@@ -1,26 +1,33 @@
 import pandas as pd
-import os
+import numpy as np
+from pathlib import Path
+import datetime
 
 def filter_excel_to_json(relative_excel_path, sheet_name, filter_column, filter_value):
-    # Construct full path from relative path
-    full_path = os.path.abspath(relative_excel_path)
+    full_path = Path(relative_excel_path).resolve()
+    if not full_path.exists():
+        raise FileNotFoundError(f"Excel file not found: {full_path}")
 
-    # Read the Excel file with header starting from the second row (index 1)
-    df = pd.read_excel(full_path, sheet_name=sheet_name, header=1, engine='openpyxl')
+    # Read Excel
+    df = pd.read_excel(full_path, sheet_name=sheet_name, header=1, engine="openpyxl")
 
-    # Filter the DataFrame based on the specified column and value
-    filtered_df = df[df[filter_column] == filter_value]
+    # Filter
+    filtered_df = df[df[filter_column] == filter_value].copy()
 
-    # Create JSON filename based on Excel filename
-    json_filename = f"filtered_{os.path.splitext(os.path.basename(relative_excel_path))[0]}.json"
+    # --- Clean for JSON ---
+    # 1. Convert pandas datetime64 columns to strings
+    for col in filtered_df.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]).columns:
+        filtered_df[col] = filtered_df[col].dt.strftime("%Y-%m-%d")
 
-    # Export the filtered DataFrame to a JSON file in the same directory as the script
-    filtered_df.to_json(json_filename, orient='records', indent=4)
+    # 2. Replace NaN/Inf with None
+    filtered_df.replace([np.nan, np.inf, -np.inf], None, inplace=True)
 
-    # Return the filtered DataFrame
+    # 3. Catch any stray Timestamp OR datetime objects
+    def normalize(val):
+        if isinstance(val, (pd.Timestamp, datetime.datetime, datetime.date)):
+            return val.isoformat()  # 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:MM:SS'
+        return val
+
+    filtered_df = filtered_df.applymap(normalize)
+
     return filtered_df
-
-
-if __name__ == "__main__":
-    result = filter_excel_to_json('project-tracker/data/Nicor DI Project Status.xlsm', 'DOT Projects', 'Project Type', 'DOT')
-    print(result)
